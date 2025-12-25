@@ -8,7 +8,7 @@ import { getWatchlistSymbolsByEmail } from "../actions/watchlist.action";
 import { getNews } from "../actions/finnhub.actions";
 import { User } from "lucide-react";
 import { json } from "better-auth";
-import { formatDateToday } from "../utils";
+import {  getFormattedTodayDate } from "../utils";
 
 
 export const sendSignUpEmail = inngest.createFunction(
@@ -104,7 +104,7 @@ export const sendDailyNewsSummary = inngest.createFunction(
 
         //generate a news summary based on their preferences
 
-        const userNewsSummeries: {user: User , newsContent: string | null}[] = [];
+        const userNewsSummeries: {user: UserForNewsEmail , newsContent: string | null}[] = [];
         for(const {user, articles} of results){
             try {
                 const prompts = NEWS_SUMMARY_EMAIL_PROMPT.replace('{{newsData}}', JSON.stringify(articles , null,2));
@@ -143,7 +143,7 @@ export const sendDailyNewsSummary = inngest.createFunction(
 
                 return await sendNewsSummaryEmail({
                     email: user.email,
-                    date: formatDateToday,
+                    date: getFormattedTodayDate(),
                     newsContent
                 })
             }))
