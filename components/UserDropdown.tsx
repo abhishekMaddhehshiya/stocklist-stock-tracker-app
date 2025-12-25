@@ -14,17 +14,22 @@ import { Button } from './ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { LogOut } from 'lucide-react';
 import NavItems from './NavItems';
+import { signOut } from '@/lib/actions/auth.action';
+import { toast } from 'sonner';
 
 
-const UserDropdown = () => {
+const UserDropdown = ({user} : {user: User}) => {
     const router: AppRouterInstance = useRouter();
     const handleSignOut: () => Promise<void> = async () => {
-        router.push("/sign-in");
+        try{
+            await signOut();
+            router.push('/sign-in');
+            toast.success('Logged out successfully!');
+        }catch(err){
+            console.log("Error during sign out:", err);
 
-
+        }
     }
-
-    const user = { name: "Abhishek", email: "abhi123@gmail.com " }
 
     return (
         <DropdownMenu >
