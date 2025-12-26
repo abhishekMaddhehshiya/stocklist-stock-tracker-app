@@ -1,5 +1,6 @@
 "use client";
 import React, { useMemo, useState } from "react";
+import {  addToWatchlistAction, removeFromWatchlistAction } from '@/lib/actions/watchlist.action';
 
 // Minimal WatchlistButton implementation to satisfy page requirements.
 // This component focuses on UI contract only. It toggles local state and
@@ -20,10 +21,34 @@ const WatchlistButton = ({
     return added ? "Remove from Watchlist" : "Add to Watchlist";
   }, [added, type]);
 
-  const handleClick = () => {
+  const [loading, setLoading] = useState(false);
+
+  
+
+  const handleClick = async () => {
+    
+    if (loading) return;
     const next = !added;
-    setAdded(next);
-    onWatchlistChange?.(symbol, next);
+    setLoading(true);
+    try {
+      if (next) {
+        const res = await addToWatchlistAction( symbol, company || symbol);
+        if (res?.ok) {
+          setAdded(true);
+          onWatchlistChange?.(symbol, true);
+        }
+      } else {
+        const res = await removeFromWatchlistAction( symbol);
+        if (res?.ok) {
+          setAdded(false);
+          onWatchlistChange?.(symbol, false);
+        }
+      }
+    } catch (err) {
+      console.error('watchlist button error', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (type === "icon") {
@@ -31,7 +56,7 @@ const WatchlistButton = ({
       <button
         title={added ? `Remove ${symbol} from watchlist` : `Add ${symbol} to watchlist`}
         aria-label={added ? `Remove ${symbol} from watchlist` : `Add ${symbol} to watchlist`}
-        className={`watchlist-icon-btn ${added ? "watchlist-icon-added" : ""}`}
+        className={`watchlist-icon-btn ${added ? "watchlist-icon-added" : ""} ${loading ? 'opacity-60 pointer-events-none' : ''}`}
         onClick={handleClick}
       >
         <svg
@@ -53,7 +78,7 @@ const WatchlistButton = ({
   }
 
   return (
-    <button className={`watchlist-btn ${added ? "watchlist-remove" : ""}`} onClick={handleClick}>
+    <button className={`watchlist-btn ${added ? "watchlist-remove" : ""} ${loading ? 'opacity-60 pointer-events-none' : ''}`} onClick={handleClick}>
       {showTrashIcon && added ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
