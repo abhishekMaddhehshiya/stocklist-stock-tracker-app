@@ -13,7 +13,6 @@ export const SignUpWithEmail = async ({email, password,fullName, country, invest
                 password:password,
                 name: fullName,
             }
-
         })
 
         if(response){
@@ -37,7 +36,7 @@ export const SignUpWithEmail = async ({email, password,fullName, country, invest
         }
     }catch(err){
         console.log("Error during sign up:", err);
-        return {success: false, error: 'Sign up failed. Please try again.'};
+        return {success: false, error: err};
     }
 }
 export const SignInWithEmail = async ({email, password}: SignInFormData)=>{
@@ -49,6 +48,7 @@ export const SignInWithEmail = async ({email, password}: SignInFormData)=>{
             }
 
         })
+       
 
         return {
             success: true,
@@ -57,7 +57,7 @@ export const SignInWithEmail = async ({email, password}: SignInFormData)=>{
         }
     }catch(err){
         console.log("Error during sign in:", err);
-        return {success: false, error: 'Sign in failed. Please try again.'};
+        return {success: false, error: err};
     }
 }
 
