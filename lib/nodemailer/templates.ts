@@ -63,6 +63,7 @@ export const WELCOME_EMAIL_TEMPLATE = `<!DOCTYPE html>
                 width: 100% !important;
                 text-align: center !important;
             }
+                
             .mobile-button a {
                 width: calc(100% - 64px) !important;
                 display: block !important;
