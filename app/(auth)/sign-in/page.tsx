@@ -29,7 +29,7 @@ const SignIn = () => {
       const result = await SignInWithEmail(data); 
       if (!result.success) {
         toast.error('Sign in failed.', {
-        description: result.error instanceof Error? result.error.message:  'Please try again.',
+          description: result.error instanceof Error? result.error.message : 'Please try again.'
           });
         return;
        
