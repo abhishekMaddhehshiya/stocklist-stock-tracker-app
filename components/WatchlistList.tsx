@@ -44,7 +44,7 @@ export default function WatchlistList({ initialItems }: { initialItems?: Item[] 
       ) : (
         <ul className="space-y-3  gap-15 pt-10">
           {items.map((it) => (
-            <li key={it.symbol} className="flex items-center justify-between p-3 border rounded w-md gap-15">
+            <li key={it.symbol} className="flex items-center justify-between p-3 border rounded lg:w-md gap-15">
               <Link href={`/stocks/${it.symbol}`} className="">
                 <div>
                   <div className="font-medium">{it.symbol}</div>

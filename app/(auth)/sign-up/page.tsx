@@ -34,8 +34,9 @@ const Signup = () => {
     try {
       const result = await SignUpWithEmail(data); 
       if (!result.success) {
+            
             toast.error('Sign up failed', {
-              description: result.error instanceof Error? result.error.message:  'Please try again.',
+              description: result.error instanceof Error? result.error.message : 'Please try again.',
             });
             return;
       }
