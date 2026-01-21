@@ -5,17 +5,17 @@ import { auth } from "../better-auth/auth";
 import { inngest } from "../inngest/client";
 
 
-export const SignUpWithEmail = async ({email, password,fullName, country, investmentGoals, riskTolerance, preferredIndustry}: SignUpFormData)=>{
-    try{
+export const SignUpWithEmail = async ({ email, password, fullName, country, investmentGoals, riskTolerance, preferredIndustry }: SignUpFormData) => {
+    try {
         const response = await auth.api.signUpEmail({
             body: {
-                email:email,
-                password:password,
+                email: email,
+                password: password,
                 name: fullName,
             }
         })
 
-        if(response){
+        if (response) {
             await inngest.send({
                 name: 'app/user.created',
                 data: {
@@ -34,41 +34,51 @@ export const SignUpWithEmail = async ({email, password,fullName, country, invest
             data: response,
             message: 'User signed up successfully'
         }
-    }catch(err){
+    } catch (err) {
         console.log("Error during sign up:", err);
-        return {success: false, error: err};
+        let message = "Sign up failed. Please try again.";
+
+        if (err instanceof Error) {
+            message = err.message;
+        }
+        return { success: false, error: message };
     }
 }
-export const SignInWithEmail = async ({email, password}: SignInFormData)=>{
-    try{
+export const SignInWithEmail = async ({ email, password }: SignInFormData) => {
+    try {
         const response = await auth.api.signInEmail({
             body: {
-                email:email,
-                password:password,
+                email: email,
+                password: password,
             }
 
         })
-       
+
 
         return {
             success: true,
             data: response,
             message: 'User signed in successfully'
         }
-    }catch(err){
+    } catch (err) {
         console.log("Error during sign in:", err);
-        return {success: false, error: err};
+        let message = "Sign in failed. Please try again.";
+
+        if (err instanceof Error) {
+            message = err.message;
+        }
+        return { success: false, error: message };
     }
 }
 
-export const signOut = async ()=>{
-    try{
+export const signOut = async () => {
+    try {
         await auth.api.signOut({
             headers: await headers()
         });
 
-    }catch(err){
+    } catch (err) {
         console.log("Error during sign out:", err);
-        return {success: false, error: 'Sign out failed. Please try again.'};
+        return { success: false, error: 'Sign out failed. Please try again.' };
     }
 }

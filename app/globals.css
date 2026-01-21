@@ -184,6 +184,9 @@
   .form-title {
     @apply text-4xl font-bold text-gray-400 mb-10;
   }
+  .form-error {
+    @apply text-sm text-red-500 mt-1;
+  }
   .form-label {
     @apply text-sm font-medium text-gray-400;
   }

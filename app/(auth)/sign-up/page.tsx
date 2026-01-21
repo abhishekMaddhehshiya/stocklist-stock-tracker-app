@@ -36,7 +36,7 @@ const Signup = () => {
       if (!result.success) {
             
             toast.error('Sign up failed', {
-              description: result.error instanceof Error? result.error.message : 'Please try again.',
+              description: result.error || 'Please try again.',
             });
             return;
       }
@@ -65,7 +65,7 @@ const Signup = () => {
         placeholder='Enter your full name'
         register={register}
         error={errors.fullName}
-        validation={{ required: "Full name is required" , minLength: 2}}
+        validation={{ required: "Full name is required" }}
       /> 
       <InputField
         name='email'
@@ -90,7 +90,7 @@ const Signup = () => {
         type='password'
         register={register}
         error={errors.password}
-        validation={{ required: "Password is required" , minLength: 6}}
+        validation={{ required: "Password is required" ,minLength: { value: 8, message: "Password must be at least 8 characters" } }}
       /> 
 
       <Selectfield
