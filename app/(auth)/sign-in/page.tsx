@@ -4,9 +4,9 @@ import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import InputField from '@/components/forms/Inputfield';
 import FooterLink from '@/components/forms/FooterLink';
-import {toast} from "sonner";
-import {signInEmail} from "better-auth/api";
-import {useRouter} from "next/navigation";
+import { toast } from "sonner";
+import { signInEmail } from "better-auth/api";
+import { useRouter } from "next/navigation";
 import { SignInWithEmail } from '@/lib/actions/auth.action';
 
 const SignIn = () => {
@@ -24,27 +24,27 @@ const SignIn = () => {
     });
 
 
-  const onSubmit = async (data: SignInFormData ) => {
-    try {
-      const result = await SignInWithEmail(data); 
-      if (!result.success) {
-        toast.error('Sign in failed.', {
-          description: result.error instanceof Error? result.error.message : 'Please try again.'
-          });
-        return;
-       
-      }
+    const onSubmit = async (data: SignInFormData) => {
+        try {
+            const result = await SignInWithEmail(data);
+            if (!result.success) {
+                toast.error('Sign in failed.', {
+                    description: result.error || 'Please try again.',
+                });
+                return;
 
-       toast.success('Logged in successfully!');
-        router.push('/')
-      
-    } catch (error) {
-      console.error('Error during sign in:', error);
-      toast.error('Sign in failed.', {
-        description: error instanceof Error? error.message:  'Please try again.',
-      });
+            }
+
+            toast.success('Logged in successfully!');
+            router.push('/')
+
+        } catch (error) {
+            console.error('Error during sign in:', error);
+            toast.error('Sign in failed.', {
+                description: error instanceof Error ? error.message : 'Please try again.',
+            });
+        }
     }
-  }
 
     return (
         <>
@@ -57,7 +57,12 @@ const SignIn = () => {
                     placeholder="abc@gmail.com"
                     register={register}
                     error={errors.email}
-                    validation={{ required: 'Email is required', pattern: /^\w+@\w+\.\w+$/ }}
+                    validation={{
+                        required: 'Email is required', pattern: {
+                            value: /^\w+@\w+\.\w+$/,
+                            message: 'Enter a valid email address',
+                        },
+                    }}
                 />
 
                 <InputField
@@ -67,7 +72,13 @@ const SignIn = () => {
                     type="password"
                     register={register}
                     error={errors.password}
-                    validation={{ required: 'Password is required', minLength: 8 }}
+                    validation={{
+                        required: 'Password is required',
+                        minLength: {
+                            value: 8,
+                            message: 'Password must be at least 8 characters',
+                        },
+                    }}
                 />
 
                 <Button type="submit" disabled={isSubmitting} className="yellow-btn w-full mt-5">

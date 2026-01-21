@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import WatchlistButton from '@/components/WatchlistButton';
 import { addToWatchlistAction, removeFromWatchlistAction } from '@/lib/actions/watchlist.action';
+import TradingViewMini from './TradingViewMini';
 
 type Item = { symbol: string; company: string };
 
@@ -20,12 +21,12 @@ export default function WatchlistList({ initialItems }: { initialItems?: Item[] 
   const handleChange = async (symbol: string, added: boolean, company?: string) => {
     try {
       if (added) {
-        const res = await addToWatchlistAction( symbol, company || symbol);
+        const res = await addToWatchlistAction(symbol, company || symbol);
         if (res?.ok) {
           setItems((s) => [...s, { symbol, company: company || symbol }]);
         }
       } else {
-        const res = await removeFromWatchlistAction( symbol);
+        const res = await removeFromWatchlistAction(symbol);
         if (res?.ok) {
           setItems((s) => s.filter((it) => it.symbol !== symbol));
         }
@@ -44,21 +45,35 @@ export default function WatchlistList({ initialItems }: { initialItems?: Item[] 
       ) : (
         <ul className="space-y-3  gap-15 pt-10">
           {items.map((it) => (
-            <li key={it.symbol} className="flex items-center justify-between p-3 border rounded lg:w-md gap-15">
-              <Link href={`/stocks/${it.symbol}`} className="">
-                <div>
-                  <div className="font-medium">{it.symbol}</div>
-                  <div className="text-sm text-gray-500">{it.company}</div>
-                </div>
-              </Link>
-              <WatchlistButton 
-                symbol={it.symbol}
-                company={it.company}
-                isInWatchlist={true}
-                showTrashIcon={true}
-                onWatchlistChange={(sym, added) => handleChange(sym, added, it.company)}
-              />
+            <li
+              key={it.symbol}
+              className="grid grid-cols-[1fr_2fr_auto] items-center gap-4 p-4 border rounded-lg"
+            >
+              {/* Symbol info */}
+               <Link
+                  href={`/stocks/${it.symbol}`}
+                  className="absolute inset-0 z-10"
+                />
+                 
+                <TradingViewMini symbol={it.symbol} />
+              
+
+              {/* TradingView chart */}
+
+              {/* Remove button */}
+            <div className="relative z-20">
+                <WatchlistButton
+                  symbol={it.symbol}
+                  company={it.company}
+                  isInWatchlist={true}
+                  showTrashIcon={true}
+                  onWatchlistChange={(sym, added) =>
+                    handleChange(sym, added, it.company)
+                  }
+                />
+              </div>
             </li>
+
           ))}
         </ul>
       )}
